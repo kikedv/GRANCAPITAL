@@ -19,7 +19,7 @@ def calculate_net_value(final_value, tax_rate):
 
 def calculate_annual_savings(rate, years, initial_capital, net_goal):
     """Calcula el ahorro anual requerido sin incremento anual."""
-    return npf.pmt(rate / 100, years, -initial_capital, net_goal, 0)
+    return abs(npf.pmt(rate / 100, years, -initial_capital, net_goal, 0))
 
 def calculate_annual_savings_with_increase(rate, increase_rate, years, initial_capital, net_goal):
     """Calcula el ahorro anual requerido con incremento anual."""
