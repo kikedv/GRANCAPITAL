@@ -63,22 +63,6 @@ def calculate_final_value(current_value, inflation, years):
 def calculate_net_value(final_value, tax_rate):
     return final_value / (1 - tax_rate / 100)
 
-def calculate_annual_savings(rate, years, initial_capital, net_goal):
-    return abs(npf.pmt(rate / 100, years, -initial_capital, net_goal, 0))
-
-def calculate_annual_savings_with_increase(rate, increase_rate, years, initial_capital, net_goal):
-    rate = rate / 100
-    increase_rate = increase_rate / 100
-    
-    if rate == increase_rate:
-        return (net_goal - (initial_capital * (1 + rate) ** years)) / \
-               (years * (1 + rate) ** years)
-    
-    numerator = net_goal - (initial_capital * (1 + rate) ** years)
-    denominator = (((1 - ((1 + increase_rate) / (1 + rate)) ** years) / (rate - increase_rate)) *
-                   (1 + rate) ** years)
-    return numerator / denominator if denominator != 0 else 0
-
 # Título
 st.title("Calculadora de Ahorro para Gran Capital")
 
@@ -122,14 +106,21 @@ with col2:
     st.markdown(tooltip_icon("Escribe el porcentaje estimado de impuestos sobre las ganancias de tu inversión."), unsafe_allow_html=True)
 
 st.header("Cálculos Intermedios")
-final_value = calculate_final_value(current_value, inflation, years)
-net_value = calculate_net_value(final_value, tax_rate)
 
-# Texto explicativo personalizado
-st.markdown(f"""
-En base a estos datos, el importe que debes alcanzar es **${final_value:,.2f}**.
-Ahora bien, como Hacienda te quitará una parte de los beneficios, deberás alcanzar un capital algo mayor. Ese **GRAN CAPITAL** es de **${net_value:,.2f}**.
-""")
+# Cálculo del gran capital y gran capital neto
+if current_value > 0 and inflation >= 0 and years > 0 and tax_rate >= 0:
+    final_value = calculate_final_value(current_value, inflation, years)
+    net_value = calculate_net_value(final_value, tax_rate)
+
+    # Texto explicativo
+    st.markdown(f"""
+    ### Resultado:
+    - En base a estos datos, el importe que debes alcanzar es **${final_value:,.2f}**.
+    - Sin embargo, como Hacienda te quitará una parte de los beneficios, deberás alcanzar un capital algo mayor.
+    - Ese **GRAN CAPITAL** es de **${net_value:,.2f}**. 💰
+    """)
+else:
+    st.markdown("Por favor, completa todos los campos para obtener los resultados. 🙏")
 
 # Entradas adicionales para los cálculos de ahorro
 st.header("Datos de la Inversión")
@@ -145,19 +136,6 @@ with col1:
     annual_increase = st.number_input("Incremento ahorro anual (%):", min_value=0.0, step=0.1)
 with col2:
     st.markdown(tooltip_icon("Introduce el porcentaje anual en el que esperas aumentar tu capacidad de ahorro."), unsafe_allow_html=True)
-
-st.header("Cálculos Finales")
-annual_savings = calculate_annual_savings(expected_rate, years, initial_capital, net_value)
-monthly_savings = annual_savings / 12
-
-st.write(f"**Ahorro periódico anual (sin incremento anual):** ${annual_savings:,.2f}")
-st.write(f"**Ahorro periódico mensual (sin incremento anual):** ${monthly_savings:,.2f}")
-
-annual_savings_increase = calculate_annual_savings_with_increase(expected_rate, annual_increase, years, initial_capital, net_value)
-monthly_savings_increase = annual_savings_increase / 12
-
-st.write(f"**Ahorro periódico anual (con incremento anual):** ${annual_savings_increase:,.2f}")
-st.write(f"**Ahorro periódico mensual (con incremento anual):** ${monthly_savings_increase:,.2f}")
 
 st.markdown("---")
 st.markdown("Desarrollado por **Tu Nombre**")
