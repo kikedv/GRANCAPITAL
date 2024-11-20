@@ -15,6 +15,23 @@ def calculate_final_value(current_value, inflation, years):
 def calculate_net_value(final_value, tax_rate):
     return final_value / (1 - tax_rate / 100)
 
+def calculate_annual_savings(rate, years, initial_capital, net_goal):
+    return abs(npf.pmt(rate / 100, years, -initial_capital, net_goal, 0))
+
+def calculate_annual_savings_with_increase(rate, increase_rate, years, initial_capital, net_goal):
+    rate = rate / 100
+    increase_rate = increase_rate / 100
+
+    if rate == increase_rate:
+        return (net_goal - (initial_capital * (1 + rate) ** years)) / (years * (1 + rate) ** years)
+
+    numerator = net_goal - (initial_capital * (1 + rate) ** years)
+    denominator = (
+        ((1 - ((1 + increase_rate) / (1 + rate)) ** years) / (rate - increase_rate))
+        * (1 + rate) ** years
+    )
+    return numerator / denominator if denominator != 0 else 0
+
 # Título
 st.title("Calculadora de Ahorro para Gran Capital")
 
@@ -65,6 +82,27 @@ st.header("Datos de la Inversión")
 
 expected_rate = st.number_input("Rentabilidad esperada de la inversión (%):", min_value=0.0, step=0.1)
 annual_increase = st.number_input("Incremento ahorro anual (%):", min_value=0.0, step=0.1)
+
+# Cálculos finales
+if expected_rate > 0 and years > 0 and net_value > 0:
+    st.header("Cálculos Finales")
+
+    # Cálculo del ahorro sin incremento anual
+    annual_savings = calculate_annual_savings(expected_rate, years, initial_capital, net_value)
+    monthly_savings = annual_savings / 12
+
+    # Mostrar resultados
+    st.write(f"**Ahorro periódico anual (sin incremento anual):** ${annual_savings:,.2f}")
+    st.write(f"**Ahorro periódico mensual (sin incremento anual):** ${monthly_savings:,.2f}")
+
+    # Cálculo del ahorro con incremento anual
+    annual_savings_increase = calculate_annual_savings_with_increase(
+        expected_rate, annual_increase, years, initial_capital, net_value
+    )
+    monthly_savings_increase = annual_savings_increase / 12
+
+    st.write(f"**Ahorro periódico anual (con incremento anual):** ${annual_savings_increase:,.2f}")
+    st.write(f"**Ahorro periódico mensual (con incremento anual):** ${monthly_savings_increase:,.2f}")
 
 st.markdown("---")
 st.markdown("Desarrollado por **Tu Nombre**")
