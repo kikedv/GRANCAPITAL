@@ -125,8 +125,11 @@ st.header("Cálculos Intermedios")
 final_value = calculate_final_value(current_value, inflation, years)
 net_value = calculate_net_value(final_value, tax_rate)
 
-st.write(f"**Valor final (Gran Capital) antes de impuestos:** ${final_value:,.2f}")
-st.write(f"**Valor final NETO del Gran Capital:** ${net_value:,.2f}")
+# Texto explicativo personalizado
+st.markdown(f"""
+En base a estos datos, el importe que debes alcanzar es **${final_value:,.2f}**.
+Ahora bien, como Hacienda te quitará una parte de los beneficios, deberás alcanzar un capital algo mayor. Ese **GRAN CAPITAL** es de **${net_value:,.2f}**.
+""")
 
 # Entradas adicionales para los cálculos de ahorro
 st.header("Datos de la Inversión")
