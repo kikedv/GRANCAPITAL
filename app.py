@@ -25,9 +25,17 @@ def calculate_annual_savings_with_increase(rate, increase_rate, years, initial_c
     """Calcula el ahorro anual requerido con incremento anual."""
     rate = rate / 100
     increase_rate = increase_rate / 100
+    
+    if rate == increase_rate:  # Manejar el caso especial donde ambas tasas son iguales
+        # Fórmula simplificada cuando rate == increase_rate
+        return (net_goal - (initial_capital * (1 + rate) ** years)) / \
+               (years * (1 + rate) ** years)
+    
+    # Fórmula general
     numerator = net_goal - (initial_capital * (1 + rate) ** years)
     denominator = (((1 - ((1 + increase_rate) / (1 + rate)) ** years) / (rate - increase_rate)) *
                    (1 + rate) ** years)
+    
     return numerator / denominator if denominator != 0 else 0
 
 # Título
