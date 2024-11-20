@@ -43,12 +43,48 @@ st.title("Calculadora de Ahorro para Gran Capital")
 
 # Entradas del usuario
 st.header("Datos del Objetivo")
-objective = st.text_input("Indica el objetivo que quieres lograr:", placeholder="Ejemplo: Master para mi hijo")
-current_value = st.number_input("Importe actual del objetivo:", min_value=0.0, step=1000.0)
-initial_capital = st.number_input("Capital inicial:", min_value=0.0, step=1000.0)
-years = st.number_input("Número de años:", min_value=1, step=1)
-inflation = st.number_input("Inflación promedio estimada (%):", min_value=0.0, step=0.1)
-tax_rate = st.number_input("Impuestos estimados sobre las ganancias (%):", min_value=0.0, step=0.1)
+col1, col2 = st.columns([3, 1])
+
+with col1:
+    objective = st.text_input("Indica el objetivo que quieres lograr:", placeholder="Ejemplo: Master para mi hijo")
+with col2:
+    st.markdown(":information_source:")
+    st.caption("Escribe aquí en formato texto el objetivo que quieres alcanzar, por ejemplo pagar el Master de tu hijo dentro de unos años, comprarte un coche, alcanzar un monto de dinero que te sirva de entrada para el piso. Tienes que poner el importe que hoy cuesta ese objetivo.")
+
+col1, col2 = st.columns([3, 1])
+with col1:
+    current_value = st.number_input("Importe actual del objetivo:", min_value=0.0, step=1000.0)
+with col2:
+    st.markdown(":information_source:")
+    st.caption("Introduce el valor en dinero que cuesta tu objetivo en la actualidad, como si lo pagaras hoy mismo.")
+
+col1, col2 = st.columns([3, 1])
+with col1:
+    initial_capital = st.number_input("Capital inicial:", min_value=0.0, step=1000.0)
+with col2:
+    st.markdown(":information_source:")
+    st.caption("Escribe cuánto dinero tienes ahorrado en este momento para comenzar a alcanzar tu objetivo.")
+
+col1, col2 = st.columns([3, 1])
+with col1:
+    years = st.number_input("Número de años:", min_value=1, step=1)
+with col2:
+    st.markdown(":information_source:")
+    st.caption("Introduce el número de años en los que deseas alcanzar tu objetivo.")
+
+col1, col2 = st.columns([3, 1])
+with col1:
+    inflation = st.number_input("Inflación promedio estimada (%):", min_value=0.0, step=0.1)
+with col2:
+    st.markdown(":information_source:")
+    st.caption("Indica la inflación promedio anual que esperas para los próximos años.")
+
+col1, col2 = st.columns([3, 1])
+with col1:
+    tax_rate = st.number_input("Impuestos estimados sobre las ganancias (%):", min_value=0.0, step=0.1)
+with col2:
+    st.markdown(":information_source:")
+    st.caption("Introduce el porcentaje estimado de impuestos que se aplicará a las ganancias de tu inversión.")
 
 st.header("Cálculos Intermedios")
 # Cálculo del gran capital y gran capital neto
@@ -60,8 +96,20 @@ st.write(f"**Valor final NETO del Gran Capital:** ${net_value:,.2f}")
 
 # Entradas adicionales para los cálculos de ahorro
 st.header("Datos de la Inversión")
-expected_rate = st.number_input("Rentabilidad esperada de la inversión (%):", min_value=0.0, step=0.1)
-annual_increase = st.number_input("Incremento ahorro anual (%):", min_value=0.0, step=0.1)
+col1, col2 = st.columns([3, 1])
+
+with col1:
+    expected_rate = st.number_input("Rentabilidad esperada de la inversión (%):", min_value=0.0, step=0.1)
+with col2:
+    st.markdown(":information_source:")
+    st.caption("Introduce la rentabilidad promedio anual que esperas obtener con tu inversión, en porcentaje.")
+
+col1, col2 = st.columns([3, 1])
+with col1:
+    annual_increase = st.number_input("Incremento ahorro anual (%):", min_value=0.0, step=0.1)
+with col2:
+    st.markdown(":information_source:")
+    st.caption("Introduce el porcentaje anual en el que esperas aumentar tu capacidad de ahorro.")
 
 st.header("Cálculos Finales")
 # Ahorro periódico sin incremento anual
