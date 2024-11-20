@@ -8,6 +8,51 @@ Created on Wed Nov 20 14:48:06 2024
 import streamlit as st
 import numpy_financial as npf
 
+# Estilo para el ícono de ayuda con tooltip
+tooltip_style = """
+<style>
+.tooltip {
+    display: inline-block;
+    position: relative;
+    cursor: pointer;
+}
+
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 200px;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%; /* Ajuste para que el texto aparezca arriba */
+    left: 50%;
+    margin-left: -100px;
+    opacity: 0;
+    transition: opacity 0.3s;
+    font-size: 12px;
+}
+
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+}
+</style>
+"""
+
+st.markdown(tooltip_style, unsafe_allow_html=True)
+
+# Función para generar tooltips
+def tooltip_icon(text):
+    return f"""
+    <div class="tooltip">
+        ℹ️
+        <span class="tooltiptext">{text}</span>
+    </div>
+    """
+
 # Fórmulas adicionales
 def calculate_final_value(current_value, inflation, years):
     """Calcula el valor final ajustado por inflación."""
@@ -43,48 +88,41 @@ st.title("Calculadora de Ahorro para Gran Capital")
 
 # Entradas del usuario
 st.header("Datos del Objetivo")
-col1, col2 = st.columns([3, 1])
+objective = st.text_input(
+    "Indica el objetivo que quieres lograr: " + 
+    st.markdown(tooltip_icon("Escribe aquí en formato texto el objetivo que quieres alcanzar, como pagar el Master de tu hijo, comprarte un coche, o alcanzar un monto de dinero para la entrada de un piso."), unsafe_allow_html=True),
+    placeholder="Ejemplo: Master para mi hijo"
+)
 
-with col1:
-    objective = st.text_input("Indica el objetivo que quieres lograr:", placeholder="Ejemplo: Master para mi hijo")
-with col2:
-    st.markdown(":information_source:")
-    st.caption("Escribe aquí en formato texto el objetivo que quieres alcanzar, por ejemplo pagar el Master de tu hijo dentro de unos años, comprarte un coche, alcanzar un monto de dinero que te sirva de entrada para el piso. Tienes que poner el importe que hoy cuesta ese objetivo.")
+current_value = st.number_input(
+    "Importe actual del objetivo: " + 
+    st.markdown(tooltip_icon("Introduce el valor en dinero que cuesta tu objetivo en la actualidad, como si lo pagaras hoy mismo."), unsafe_allow_html=True),
+    min_value=0.0, step=1000.0
+)
 
-col1, col2 = st.columns([3, 1])
-with col1:
-    current_value = st.number_input("Importe actual del objetivo:", min_value=0.0, step=1000.0)
-with col2:
-    st.markdown(":information_source:")
-    st.caption("Introduce el valor en dinero que cuesta tu objetivo en la actualidad, como si lo pagaras hoy mismo.")
+initial_capital = st.number_input(
+    "Capital inicial: " +
+    st.markdown(tooltip_icon("Escribe cuánto dinero tienes ahorrado en este momento para comenzar a alcanzar tu objetivo."), unsafe_allow_html=True),
+    min_value=0.0, step=1000.0
+)
 
-col1, col2 = st.columns([3, 1])
-with col1:
-    initial_capital = st.number_input("Capital inicial:", min_value=0.0, step=1000.0)
-with col2:
-    st.markdown(":information_source:")
-    st.caption("Escribe cuánto dinero tienes ahorrado en este momento para comenzar a alcanzar tu objetivo.")
+years = st.number_input(
+    "Número de años: " +
+    st.markdown(tooltip_icon("Introduce el número de años en los que deseas alcanzar tu objetivo."), unsafe_allow_html=True),
+    min_value=1, step=1
+)
 
-col1, col2 = st.columns([3, 1])
-with col1:
-    years = st.number_input("Número de años:", min_value=1, step=1)
-with col2:
-    st.markdown(":information_source:")
-    st.caption("Introduce el número de años en los que deseas alcanzar tu objetivo.")
+inflation = st.number_input(
+    "Inflación promedio estimada (%): " +
+    st.markdown(tooltip_icon("Indica la inflación promedio anual que esperas para los próximos años."), unsafe_allow_html=True),
+    min_value=0.0, step=0.1
+)
 
-col1, col2 = st.columns([3, 1])
-with col1:
-    inflation = st.number_input("Inflación promedio estimada (%):", min_value=0.0, step=0.1)
-with col2:
-    st.markdown(":information_source:")
-    st.caption("Indica la inflación promedio anual que esperas para los próximos años.")
-
-col1, col2 = st.columns([3, 1])
-with col1:
-    tax_rate = st.number_input("Impuestos estimados sobre las ganancias (%):", min_value=0.0, step=0.1)
-with col2:
-    st.markdown(":information_source:")
-    st.caption("Introduce el porcentaje estimado de impuestos que se aplicará a las ganancias de tu inversión.")
+tax_rate = st.number_input(
+    "Impuestos estimados sobre las ganancias (%): " +
+    st.markdown(tooltip_icon("Introduce el porcentaje estimado de impuestos que se aplicará a las ganancias de tu inversión."), unsafe_allow_html=True),
+    min_value=0.0, step=0.1
+)
 
 st.header("Cálculos Intermedios")
 # Cálculo del gran capital y gran capital neto
@@ -96,20 +134,17 @@ st.write(f"**Valor final NETO del Gran Capital:** ${net_value:,.2f}")
 
 # Entradas adicionales para los cálculos de ahorro
 st.header("Datos de la Inversión")
-col1, col2 = st.columns([3, 1])
+expected_rate = st.number_input(
+    "Rentabilidad esperada de la inversión (%): " +
+    st.markdown(tooltip_icon("Introduce la rentabilidad promedio anual que esperas obtener con tu inversión, en porcentaje."), unsafe_allow_html=True),
+    min_value=0.0, step=0.1
+)
 
-with col1:
-    expected_rate = st.number_input("Rentabilidad esperada de la inversión (%):", min_value=0.0, step=0.1)
-with col2:
-    st.markdown(":information_source:")
-    st.caption("Introduce la rentabilidad promedio anual que esperas obtener con tu inversión, en porcentaje.")
-
-col1, col2 = st.columns([3, 1])
-with col1:
-    annual_increase = st.number_input("Incremento ahorro anual (%):", min_value=0.0, step=0.1)
-with col2:
-    st.markdown(":information_source:")
-    st.caption("Introduce el porcentaje anual en el que esperas aumentar tu capacidad de ahorro.")
+annual_increase = st.number_input(
+    "Incremento ahorro anual (%): " +
+    st.markdown(tooltip_icon("Introduce el porcentaje anual en el que esperas aumentar tu capacidad de ahorro."), unsafe_allow_html=True),
+    min_value=0.0, step=0.1
+)
 
 st.header("Cálculos Finales")
 # Ahorro periódico sin incremento anual
