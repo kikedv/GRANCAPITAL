@@ -8,7 +8,22 @@ Created on Wed Nov 20 14:48:06 2024
 import streamlit as st
 import numpy_financial as npf
 
-# Estilo para el ícono de ayuda con tooltip
+# Estilo para ocultar etiquetas visualmente
+hide_labels_style = """
+<style>
+div[data-testid="stMarkdownContainer"] {
+    display: flex;
+    align-items: center;
+}
+
+div[data-testid="stMarkdownContainer"] > label {
+    visibility: hidden;
+    height: 0;
+}
+</style>
+"""
+
+# Estilo para tooltips
 tooltip_style = """
 <style>
 .tooltip {
@@ -27,7 +42,7 @@ tooltip_style = """
     padding: 5px;
     position: absolute;
     z-index: 1;
-    bottom: 125%; /* Ajuste para que el texto aparezca arriba */
+    bottom: 125%;
     left: 50%;
     margin-left: -100px;
     opacity: 0;
@@ -42,6 +57,8 @@ tooltip_style = """
 </style>
 """
 
+# Agregar estilos personalizados
+st.markdown(hide_labels_style, unsafe_allow_html=True)
 st.markdown(tooltip_style, unsafe_allow_html=True)
 
 # Función para generar tooltips
@@ -58,32 +75,25 @@ def tooltip_icon(field_label, tooltip_text):
 
 # Fórmulas adicionales
 def calculate_final_value(current_value, inflation, years):
-    """Calcula el valor final ajustado por inflación."""
     return current_value * (1 + inflation / 100) ** years
 
 def calculate_net_value(final_value, tax_rate):
-    """Calcula el valor neto después de impuestos."""
     return final_value / (1 - tax_rate / 100)
 
 def calculate_annual_savings(rate, years, initial_capital, net_goal):
-    """Calcula el ahorro anual requerido sin incremento anual."""
     return abs(npf.pmt(rate / 100, years, -initial_capital, net_goal, 0))
 
 def calculate_annual_savings_with_increase(rate, increase_rate, years, initial_capital, net_goal):
-    """Calcula el ahorro anual requerido con incremento anual."""
     rate = rate / 100
     increase_rate = increase_rate / 100
     
-    if rate == increase_rate:  # Manejar el caso especial donde ambas tasas son iguales
-        # Fórmula simplificada cuando rate == increase_rate
+    if rate == increase_rate:
         return (net_goal - (initial_capital * (1 + rate) ** years)) / \
                (years * (1 + rate) ** years)
     
-    # Fórmula general
     numerator = net_goal - (initial_capital * (1 + rate) ** years)
     denominator = (((1 - ((1 + increase_rate) / (1 + rate)) ** years) / (rate - increase_rate)) *
                    (1 + rate) ** years)
-    
     return numerator / denominator if denominator != 0 else 0
 
 # Título
@@ -95,35 +105,34 @@ st.header("Datos del Objetivo")
 st.markdown(tooltip_icon("Indica el objetivo que quieres lograr:", 
                          "Escribe aquí en formato texto el objetivo que quieres alcanzar, como pagar el Master de tu hijo, comprarte un coche, o alcanzar un monto de dinero para la entrada de un piso."),
              unsafe_allow_html=True)
-objective = st.text_input(label="", placeholder="Ejemplo: Master para mi hijo")
+objective = st.text_input(label="objective_label", placeholder="Ejemplo: Master para mi hijo")
 
 st.markdown(tooltip_icon("Importe actual del objetivo:", 
                          "Introduce el valor en dinero que cuesta tu objetivo en la actualidad, como si lo pagaras hoy mismo."),
              unsafe_allow_html=True)
-current_value = st.number_input(label="", min_value=0.0, step=1000.0)
+current_value = st.number_input(label="current_value_label", min_value=0.0, step=1000.0)
 
 st.markdown(tooltip_icon("Capital inicial:", 
                          "Escribe cuánto dinero tienes ahorrado en este momento para comenzar a alcanzar tu objetivo."),
              unsafe_allow_html=True)
-initial_capital = st.number_input(label="", min_value=0.0, step=1000.0)
+initial_capital = st.number_input(label="initial_capital_label", min_value=0.0, step=1000.0)
 
 st.markdown(tooltip_icon("Número de años:", 
                          "Introduce el número de años en los que deseas alcanzar tu objetivo."),
              unsafe_allow_html=True)
-years = st.number_input(label="", min_value=1, step=1)
+years = st.number_input(label="years_label", min_value=1, step=1)
 
 st.markdown(tooltip_icon("Inflación promedio estimada (%):", 
                          "Indica la inflación promedio anual que esperas para los próximos años."),
              unsafe_allow_html=True)
-inflation = st.number_input(label="", min_value=0.0, step=0.1)
+inflation = st.number_input(label="inflation_label", min_value=0.0, step=0.1)
 
 st.markdown(tooltip_icon("Impuestos estimados sobre las ganancias (%):", 
                          "Introduce el porcentaje estimado de impuestos que se aplicará a las ganancias de tu inversión."),
              unsafe_allow_html=True)
-tax_rate = st.number_input(label="", min_value=0.0, step=0.1)
+tax_rate = st.number_input(label="tax_rate_label", min_value=0.0, step=0.1)
 
 st.header("Cálculos Intermedios")
-# Cálculo del gran capital y gran capital neto
 final_value = calculate_final_value(current_value, inflation, years)
 net_value = calculate_net_value(final_value, tax_rate)
 
@@ -136,22 +145,20 @@ st.header("Datos de la Inversión")
 st.markdown(tooltip_icon("Rentabilidad esperada de la inversión (%):", 
                          "Introduce la rentabilidad promedio anual que esperas obtener con tu inversión, en porcentaje."),
              unsafe_allow_html=True)
-expected_rate = st.number_input(label="", min_value=0.0, step=0.1)
+expected_rate = st.number_input(label="expected_rate_label", min_value=0.0, step=0.1)
 
 st.markdown(tooltip_icon("Incremento ahorro anual (%):", 
                          "Introduce el porcentaje anual en el que esperas aumentar tu capacidad de ahorro."),
              unsafe_allow_html=True)
-annual_increase = st.number_input(label="", min_value=0.0, step=0.1)
+annual_increase = st.number_input(label="annual_increase_label", min_value=0.0, step=0.1)
 
 st.header("Cálculos Finales")
-# Ahorro periódico sin incremento anual
 annual_savings = calculate_annual_savings(expected_rate, years, initial_capital, net_value)
 monthly_savings = annual_savings / 12
 
 st.write(f"**Ahorro periódico anual (sin incremento anual):** ${annual_savings:,.2f}")
 st.write(f"**Ahorro periódico mensual (sin incremento anual):** ${monthly_savings:,.2f}")
 
-# Ahorro periódico con incremento anual
 annual_savings_increase = calculate_annual_savings_with_increase(expected_rate, annual_increase, years, initial_capital, net_value)
 monthly_savings_increase = annual_savings_increase / 12
 
