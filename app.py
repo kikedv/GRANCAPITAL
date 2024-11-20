@@ -104,5 +104,18 @@ if expected_rate > 0 and years > 0 and net_value > 0:
     st.write(f"**Ahorro periódico anual (con incremento anual):** ${annual_savings_increase:,.2f}")
     st.write(f"**Ahorro periódico mensual (con incremento anual):** ${monthly_savings_increase:,.2f}")
 
+    # Resumen
+    st.header("Resumen")
+    resumen = (
+        f"¿Qué quiere decir todo lo que hemos calculado? Muy fácil, para alcanzar tu objetivo, tienes que alcanzar "
+        f"un GRAN CAPITAL de ${net_value:,.2f} dentro de {years} años. Para lograr ese objetivo, y suponiendo que ejecutes "
+        f"una estrategia de inversión que te proporcione un {expected_rate:.2f}% de rentabilidad anual promedio, tendrás que "
+        f"ahorrar e invertir cada mes un monto de ${monthly_savings:,.2f} o, en términos anuales, ${annual_savings:,.2f}. "
+        f"Ahora bien, si haces el esfuerzo de incrementar todos los años tus aportaciones en un {annual_increase:.2f}%, "
+        f"la cantidad mensual y anual varía en el primer año. Ahora tendrás que ahorrar e invertir ese primer año un total de "
+        f"${annual_savings_increase:,.2f}, es decir, ${monthly_savings_increase:,.2f} al mes."
+    )
+    st.write(resumen)
+
 st.markdown("---")
 st.markdown("Desarrollado por **Tu Nombre**")
