@@ -60,9 +60,8 @@ if current_value > 0 and inflation >= 0 and years > 0 and tax_rate >= 0:
     )
 
     # Mostrar texto formateado
-    st.write(" ")
-    st.write(texto_resultado)
-    st.write(" ")
+    st.markdown(texto_resultado)
+    st.markdown(" ")
 
     # Nuevo párrafo
     nuevo_parrafo = (
@@ -73,9 +72,9 @@ if current_value > 0 and inflation >= 0 and years > 0 and tax_rate >= 0:
         "decir que todos los años tratarás de incrementar tus aportaciones en ese porcentaje para alimentar "
         "más a tu \"máquina de hacer dinero\"."
     )
-    st.write(nuevo_parrafo)
+    st.markdown(nuevo_parrafo)
 else:
-    st.write("Por favor, completa todos los campos para obtener los resultados. 🙏")
+    st.markdown("Por favor, completa todos los campos para obtener los resultados. 🙏")
 
 # Entradas adicionales para los cálculos de ahorro
 st.header("Datos de la Inversión")
@@ -92,8 +91,8 @@ if expected_rate > 0 and years > 0 and net_value > 0:
     monthly_savings = annual_savings / 12
 
     # Mostrar resultados
-    st.write(f"**Ahorro periódico anual (sin incremento anual):** ${annual_savings:,.2f}")
-    st.write(f"**Ahorro periódico mensual (sin incremento anual):** ${monthly_savings:,.2f}")
+    st.markdown(f"**Ahorro periódico anual (sin incremento anual):** ${annual_savings:,.2f}")
+    st.markdown(f"**Ahorro periódico mensual (sin incremento anual):** ${monthly_savings:,.2f}")
 
     # Cálculo del ahorro con incremento anual
     annual_savings_increase = calculate_annual_savings_with_increase(
@@ -101,8 +100,8 @@ if expected_rate > 0 and years > 0 and net_value > 0:
     )
     monthly_savings_increase = annual_savings_increase / 12
 
-    st.write(f"**Ahorro periódico anual (con incremento anual):** ${annual_savings_increase:,.2f}")
-    st.write(f"**Ahorro periódico mensual (con incremento anual):** ${monthly_savings_increase:,.2f}")
+    st.markdown(f"**Ahorro periódico anual (con incremento anual):** ${annual_savings_increase:,.2f}")
+    st.markdown(f"**Ahorro periódico mensual (con incremento anual):** ${monthly_savings_increase:,.2f}")
 
     # Resumen
     st.header("Resumen")
@@ -115,7 +114,7 @@ if expected_rate > 0 and years > 0 and net_value > 0:
         f"la cantidad mensual y anual varía en el primer año. Ahora tendrás que ahorrar e invertir ese primer año un total de "
         f"${annual_savings_increase:,.2f}, es decir, ${monthly_savings_increase:,.2f} al mes."
     )
-    st.write(resumen)
+    st.markdown(resumen)
 
 st.markdown("---")
 st.markdown("Desarrollado por **Tu Nombre**")
