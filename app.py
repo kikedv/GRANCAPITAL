@@ -112,12 +112,9 @@ if current_value > 0 and inflation >= 0 and years > 0 and tax_rate >= 0:
     final_value = calculate_final_value(current_value, inflation, years)
     net_value = calculate_net_value(final_value, tax_rate)
 
-    # Texto explicativo
+    # Texto explicativo en un párrafo
     st.markdown(f"""
-    ### Resultado:
-    - En base a estos datos, el importe que debes alcanzar es **${final_value:,.2f}**.
-    - Sin embargo, como Hacienda te quitará una parte de los beneficios, deberás alcanzar un capital algo mayor.
-    - Ese **GRAN CAPITAL** es de **${net_value:,.2f}**. 💰
+    En base a estos datos, el importe que debes alcanzar es **${final_value:,.2f}**. Sin embargo, como Hacienda te quitará una parte de los beneficios, deberás alcanzar un capital algo mayor. Ese **GRAN CAPITAL** es de **${net_value:,.2f}**. 💰
     """)
 else:
     st.markdown("Por favor, completa todos los campos para obtener los resultados. 🙏")
