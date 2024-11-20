@@ -95,32 +95,32 @@ st.header("Datos del Objetivo")
 st.markdown(tooltip_icon("Indica el objetivo que quieres lograr:", 
                          "Escribe aquí en formato texto el objetivo que quieres alcanzar, como pagar el Master de tu hijo, comprarte un coche, o alcanzar un monto de dinero para la entrada de un piso."),
              unsafe_allow_html=True)
-objective = st.text_input("Objetivo:", placeholder="Ejemplo: Master para mi hijo")
+objective = st.text_input(label="", placeholder="Ejemplo: Master para mi hijo")
 
 st.markdown(tooltip_icon("Importe actual del objetivo:", 
                          "Introduce el valor en dinero que cuesta tu objetivo en la actualidad, como si lo pagaras hoy mismo."),
              unsafe_allow_html=True)
-current_value = st.number_input("Importe actual del objetivo:", min_value=0.0, step=1000.0)
+current_value = st.number_input(label="", min_value=0.0, step=1000.0)
 
 st.markdown(tooltip_icon("Capital inicial:", 
                          "Escribe cuánto dinero tienes ahorrado en este momento para comenzar a alcanzar tu objetivo."),
              unsafe_allow_html=True)
-initial_capital = st.number_input("Capital inicial:", min_value=0.0, step=1000.0)
+initial_capital = st.number_input(label="", min_value=0.0, step=1000.0)
 
 st.markdown(tooltip_icon("Número de años:", 
                          "Introduce el número de años en los que deseas alcanzar tu objetivo."),
              unsafe_allow_html=True)
-years = st.number_input("Número de años:", min_value=1, step=1)
+years = st.number_input(label="", min_value=1, step=1)
 
 st.markdown(tooltip_icon("Inflación promedio estimada (%):", 
                          "Indica la inflación promedio anual que esperas para los próximos años."),
              unsafe_allow_html=True)
-inflation = st.number_input("Inflación promedio estimada (%):", min_value=0.0, step=0.1)
+inflation = st.number_input(label="", min_value=0.0, step=0.1)
 
 st.markdown(tooltip_icon("Impuestos estimados sobre las ganancias (%):", 
                          "Introduce el porcentaje estimado de impuestos que se aplicará a las ganancias de tu inversión."),
              unsafe_allow_html=True)
-tax_rate = st.number_input("Impuestos estimados sobre las ganancias (%):", min_value=0.0, step=0.1)
+tax_rate = st.number_input(label="", min_value=0.0, step=0.1)
 
 st.header("Cálculos Intermedios")
 # Cálculo del gran capital y gran capital neto
@@ -136,12 +136,12 @@ st.header("Datos de la Inversión")
 st.markdown(tooltip_icon("Rentabilidad esperada de la inversión (%):", 
                          "Introduce la rentabilidad promedio anual que esperas obtener con tu inversión, en porcentaje."),
              unsafe_allow_html=True)
-expected_rate = st.number_input("Rentabilidad esperada de la inversión (%):", min_value=0.0, step=0.1)
+expected_rate = st.number_input(label="", min_value=0.0, step=0.1)
 
 st.markdown(tooltip_icon("Incremento ahorro anual (%):", 
                          "Introduce el porcentaje anual en el que esperas aumentar tu capacidad de ahorro."),
              unsafe_allow_html=True)
-annual_increase = st.number_input("Incremento ahorro anual (%):", min_value=0.0, step=0.1)
+annual_increase = st.number_input(label="", min_value=0.0, step=0.1)
 
 st.header("Cálculos Finales")
 # Ahorro periódico sin incremento anual
