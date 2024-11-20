@@ -8,21 +8,6 @@ Created on Wed Nov 20 14:48:06 2024
 import streamlit as st
 import numpy_financial as npf
 
-# Estilo para ocultar etiquetas visualmente
-hide_labels_style = """
-<style>
-div[data-testid="stMarkdownContainer"] {
-    display: flex;
-    align-items: center;
-}
-
-div[data-testid="stMarkdownContainer"] > label {
-    visibility: hidden;
-    height: 0;
-}
-</style>
-"""
-
 # Estilo para tooltips
 tooltip_style = """
 <style>
@@ -30,11 +15,13 @@ tooltip_style = """
     display: inline-block;
     position: relative;
     cursor: pointer;
+    margin-left: 5px;
+    color: #4a4a4a;
 }
 
 .tooltip .tooltiptext {
     visibility: hidden;
-    width: 200px;
+    width: 220px;
     background-color: black;
     color: #fff;
     text-align: center;
@@ -44,7 +31,7 @@ tooltip_style = """
     z-index: 1;
     bottom: 125%;
     left: 50%;
-    margin-left: -100px;
+    margin-left: -110px;
     opacity: 0;
     transition: opacity 0.3s;
     font-size: 12px;
@@ -58,19 +45,15 @@ tooltip_style = """
 """
 
 # Agregar estilos personalizados
-st.markdown(hide_labels_style, unsafe_allow_html=True)
 st.markdown(tooltip_style, unsafe_allow_html=True)
 
 # Función para generar tooltips
-def tooltip_icon(field_label, tooltip_text):
+def tooltip_icon(tooltip_text):
     return f"""
-    <label>
-        {field_label}
-        <div class="tooltip">
-            ℹ️
-            <span class="tooltiptext">{tooltip_text}</span>
-        </div>
-    </label>
+    <div class="tooltip">
+        ℹ️
+        <span class="tooltiptext">{tooltip_text}</span>
+    </div>
     """
 
 # Fórmulas adicionales
@@ -102,35 +85,41 @@ st.title("Calculadora de Ahorro para Gran Capital")
 # Entradas del usuario
 st.header("Datos del Objetivo")
 
-st.markdown(tooltip_icon("Indica el objetivo que quieres lograr:", 
-                         "Escribe aquí en formato texto el objetivo que quieres alcanzar, como pagar el Master de tu hijo, comprarte un coche, o alcanzar un monto de dinero para la entrada de un piso."),
-             unsafe_allow_html=True)
-objective = st.text_input(label="objective_label", placeholder="Ejemplo: Master para mi hijo")
+col1, col2 = st.columns([3, 1])
+with col1:
+    objective = st.text_input("Objetivo:", placeholder="Ejemplo: Master para mi hijo")
+with col2:
+    st.markdown(tooltip_icon("Escribe aquí el objetivo que quieres alcanzar, como pagar el Master de tu hijo, comprarte un coche o reunir un monto de dinero para la entrada de un piso."), unsafe_allow_html=True)
 
-st.markdown(tooltip_icon("Importe actual del objetivo:", 
-                         "Introduce el valor en dinero que cuesta tu objetivo en la actualidad, como si lo pagaras hoy mismo."),
-             unsafe_allow_html=True)
-current_value = st.number_input(label="current_value_label", min_value=0.0, step=1000.0)
+col1, col2 = st.columns([3, 1])
+with col1:
+    current_value = st.number_input("Importe actual del objetivo:", min_value=0.0, step=1000.0)
+with col2:
+    st.markdown(tooltip_icon("Introduce el costo actual de tu objetivo como si lo pagaras hoy mismo."), unsafe_allow_html=True)
 
-st.markdown(tooltip_icon("Capital inicial:", 
-                         "Escribe cuánto dinero tienes ahorrado en este momento para comenzar a alcanzar tu objetivo."),
-             unsafe_allow_html=True)
-initial_capital = st.number_input(label="initial_capital_label", min_value=0.0, step=1000.0)
+col1, col2 = st.columns([3, 1])
+with col1:
+    initial_capital = st.number_input("Capital inicial:", min_value=0.0, step=1000.0)
+with col2:
+    st.markdown(tooltip_icon("Escribe cuánto dinero tienes ahorrado actualmente para alcanzar tu objetivo."), unsafe_allow_html=True)
 
-st.markdown(tooltip_icon("Número de años:", 
-                         "Introduce el número de años en los que deseas alcanzar tu objetivo."),
-             unsafe_allow_html=True)
-years = st.number_input(label="years_label", min_value=1, step=1)
+col1, col2 = st.columns([3, 1])
+with col1:
+    years = st.number_input("Número de años:", min_value=1, step=1)
+with col2:
+    st.markdown(tooltip_icon("Indica en cuántos años deseas alcanzar tu objetivo."), unsafe_allow_html=True)
 
-st.markdown(tooltip_icon("Inflación promedio estimada (%):", 
-                         "Indica la inflación promedio anual que esperas para los próximos años."),
-             unsafe_allow_html=True)
-inflation = st.number_input(label="inflation_label", min_value=0.0, step=0.1)
+col1, col2 = st.columns([3, 1])
+with col1:
+    inflation = st.number_input("Inflación promedio estimada (%):", min_value=0.0, step=0.1)
+with col2:
+    st.markdown(tooltip_icon("Introduce la inflación promedio anual esperada para los próximos años."), unsafe_allow_html=True)
 
-st.markdown(tooltip_icon("Impuestos estimados sobre las ganancias (%):", 
-                         "Introduce el porcentaje estimado de impuestos que se aplicará a las ganancias de tu inversión."),
-             unsafe_allow_html=True)
-tax_rate = st.number_input(label="tax_rate_label", min_value=0.0, step=0.1)
+col1, col2 = st.columns([3, 1])
+with col1:
+    tax_rate = st.number_input("Impuestos estimados sobre las ganancias (%):", min_value=0.0, step=0.1)
+with col2:
+    st.markdown(tooltip_icon("Escribe el porcentaje estimado de impuestos sobre las ganancias de tu inversión."), unsafe_allow_html=True)
 
 st.header("Cálculos Intermedios")
 final_value = calculate_final_value(current_value, inflation, years)
@@ -142,15 +131,17 @@ st.write(f"**Valor final NETO del Gran Capital:** ${net_value:,.2f}")
 # Entradas adicionales para los cálculos de ahorro
 st.header("Datos de la Inversión")
 
-st.markdown(tooltip_icon("Rentabilidad esperada de la inversión (%):", 
-                         "Introduce la rentabilidad promedio anual que esperas obtener con tu inversión, en porcentaje."),
-             unsafe_allow_html=True)
-expected_rate = st.number_input(label="expected_rate_label", min_value=0.0, step=0.1)
+col1, col2 = st.columns([3, 1])
+with col1:
+    expected_rate = st.number_input("Rentabilidad esperada de la inversión (%):", min_value=0.0, step=0.1)
+with col2:
+    st.markdown(tooltip_icon("Introduce la rentabilidad promedio anual que esperas obtener con tu inversión."), unsafe_allow_html=True)
 
-st.markdown(tooltip_icon("Incremento ahorro anual (%):", 
-                         "Introduce el porcentaje anual en el que esperas aumentar tu capacidad de ahorro."),
-             unsafe_allow_html=True)
-annual_increase = st.number_input(label="annual_increase_label", min_value=0.0, step=0.1)
+col1, col2 = st.columns([3, 1])
+with col1:
+    annual_increase = st.number_input("Incremento ahorro anual (%):", min_value=0.0, step=0.1)
+with col2:
+    st.markdown(tooltip_icon("Introduce el porcentaje anual en el que esperas aumentar tu capacidad de ahorro."), unsafe_allow_html=True)
 
 st.header("Cálculos Finales")
 annual_savings = calculate_annual_savings(expected_rate, years, initial_capital, net_value)
