@@ -67,15 +67,6 @@ if current_value > 0 and inflation >= 0 and years > 0 and tax_rate >= 0:
     st.markdown(texto_resultado)
     st.markdown(" ")
 
-    nuevo_parrafo = (
-        "Ahora introduce la rentabilidad promedio anual que esperas alcanzar con tu estrategia de inversión. "
-        "En la sección de carteras modelo, tienes varias propuestas que te indican la rentabilidad estimada "
-        "en base a cómo se han comportado en el pasado. Introduce también un porcentaje de incremento anual "
-        "del ahorro que destinarás a la inversión. Sería importante que lo introdujeras porque eso querrá "
-        "decir que todos los años tratarás de incrementar tus aportaciones en ese porcentaje para alimentar "
-        "más a tu \"máquina de hacer dinero\"."
-    )
-    st.markdown(nuevo_parrafo)
 else:
     st.markdown("Por favor, completa todos los campos para obtener los resultados. 🙏")
 
@@ -83,10 +74,21 @@ else:
 if expected_rate > 0 and years > 0 and net_value > 0:
     st.header("Cálculos Finales")
 
+    # Cálculo del ahorro sin incremento anual
+    annual_savings = calculate_annual_savings(expected_rate, years, initial_capital, net_value)
+    monthly_savings = annual_savings / 12
+
+    st.markdown(f"**Ahorro periódico anual (sin incremento anual):** ${annual_savings:,.2f}")
+    st.markdown(f"**Ahorro periódico mensual (sin incremento anual):** ${monthly_savings:,.2f}")
+
     # Cálculo del ahorro con incremento anual
     annual_savings_increase = calculate_annual_savings_with_increase(
         expected_rate, annual_increase, years, initial_capital, net_value
     )
+    monthly_savings_increase = annual_savings_increase / 12
+
+    st.markdown(f"**Ahorro periódico anual (con incremento anual):** ${annual_savings_increase:,.2f}")
+    st.markdown(f"**Ahorro periódico mensual (con incremento anual):** ${monthly_savings_increase:,.2f}")
 
     # Gráfico de evolución del capital
     st.header("Evolución del Capital Acumulado")
