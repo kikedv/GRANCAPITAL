@@ -7,6 +7,8 @@ Created on Wed Nov 20 14:48:06 2024
 
 import streamlit as st
 import numpy_financial as npf
+import matplotlib.pyplot as plt
+import pandas as pd
 
 # Fórmulas adicionales
 def calculate_final_value(current_value, inflation, years):
@@ -52,18 +54,14 @@ if current_value > 0 and inflation >= 0 and years > 0 and tax_rate >= 0:
     final_value = calculate_final_value(current_value, inflation, years)
     net_value = calculate_net_value(final_value, tax_rate)
 
-    # Texto explicativo con formato mejorado
     texto_resultado = (
         f"En base a estos datos, el importe que debes alcanzar es {final_value:,.2f}. "
         f"Sin embargo, como Hacienda te quitará una parte de los beneficios, deberás alcanzar un capital algo mayor. "
         f"Ese GRAN CAPITAL es de {net_value:,.2f}."
     )
-
-    # Mostrar texto formateado
     st.markdown(texto_resultado)
     st.markdown(" ")
 
-    # Nuevo párrafo
     nuevo_parrafo = (
         "Ahora introduce la rentabilidad promedio anual que esperas alcanzar con tu estrategia de inversión. "
         "En la sección de carteras modelo, tienes varias propuestas que te indican la rentabilidad estimada "
@@ -90,7 +88,6 @@ if expected_rate > 0 and years > 0 and net_value > 0:
     annual_savings = calculate_annual_savings(expected_rate, years, initial_capital, net_value)
     monthly_savings = annual_savings / 12
 
-    # Mostrar resultados
     st.markdown(f"**Ahorro periódico anual (sin incremento anual):** ${annual_savings:,.2f}")
     st.markdown(f"**Ahorro periódico mensual (sin incremento anual):** ${monthly_savings:,.2f}")
 
@@ -103,16 +100,37 @@ if expected_rate > 0 and years > 0 and net_value > 0:
     st.markdown(f"**Ahorro periódico anual (con incremento anual):** ${annual_savings_increase:,.2f}")
     st.markdown(f"**Ahorro periódico mensual (con incremento anual):** ${monthly_savings_increase:,.2f}")
 
-    # Resumen
-    st.header("Resumen")
-    resumen = (
-        f"¿Qué quiere decir todo lo que hemos calculado? Muy fácil, para alcanzar tu objetivo, tienes que alcanzar un GRAN CAPITAL de {net_value:,.2f} "
-        f"dentro de {years} años. Para lograr ese objetivo, y suponiendo que ejecutes una estrategia de inversión que te proporcione un {expected_rate:.2f}% "
-        f"de rentabilidad anual promedio, tendrás que ahorrar e invertir cada mes un monto de {monthly_savings:,.2f} o, en términos anuales, {annual_savings:,.2f}. "
-        f"Ahora bien, si haces el esfuerzo de incrementar todos los años tus aportaciones en un {annual_increase:.2f}%, la cantidad mensual y anual varía en el "
-        f"primer año. Ahora tendrás que ahorrar e invertir ese primer año un total de {annual_savings_increase:,.2f}, es decir, {monthly_savings_increase:,.2f} al mes."
-    )
-    st.markdown(resumen)
+    # Gráfico de evolución del capital
+    st.header("Evolución del Capital Acumulado")
+
+    # Cálculo de la evolución del capital
+    capital_evolucion = []
+    ahorro_anual = annual_savings_increase
+    capital_actual = initial_capital
+
+    for i in range(1, years + 1):
+        capital_actual *= (1 + expected_rate / 100)  # Aplicar rentabilidad
+        capital_actual += ahorro_anual              # Agregar el ahorro anual
+        capital_evolucion.append(capital_actual)
+        ahorro_anual *= (1 + inflation / 100)       # Incrementar el ahorro anual según la inflación
+
+    # Crear DataFrame para el gráfico
+    df_evolucion = pd.DataFrame({
+        "Año": list(range(1, years + 1)),
+        "Capital Acumulado": capital_evolucion
+    })
+
+    # Generar el gráfico
+    plt.figure(figsize=(10, 6))
+    plt.plot(df_evolucion["Año"], df_evolucion["Capital Acumulado"], marker='o')
+    plt.title("Evolución del Capital Acumulado", fontsize=16)
+    plt.xlabel("Año", fontsize=12)
+    plt.ylabel("Capital Acumulado ($)", fontsize=12)
+    plt.grid(True)
+    plt.tight_layout()
+
+    # Mostrar el gráfico en Streamlit
+    st.pyplot(plt)
 
 st.markdown("---")
 st.markdown("Desarrollado por **Tu Nombre**")
