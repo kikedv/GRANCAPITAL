@@ -35,7 +35,15 @@ def calculate_annual_savings_with_increase(rate, increase_rate, years, initial_c
     return numerator / denominator if denominator != 0 else 0
 
 # Título
-st.title("Calculadora de Ahorro para Gran Capital")
+st.title("¿Cuánto necesito ahorrar todos los meses para conseguir mis objetivos?")
+
+    parrafo_inicial = (
+        "Esta herramienta te ayudará para saber grosso modo cuánto tienes que ahorrar e invertir cada mes "
+        "(y cada año) para alcanzar un determinado objetivo económico. Es una orientación, una ayuda.  "
+        "Completa los siguientes campos y observa que te sugieren las matemáticas\"."
+      
+    )
+    st.markdown(parrafo_inicial)
 
 # Entradas del usuario
 st.header("Datos del Objetivo")
