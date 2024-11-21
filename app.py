@@ -57,30 +57,36 @@ tax_rate = st.number_input("Impuestos estimados sobre las ganancias (%):", min_v
 
 st.header("Cálculos Intermedios")
 
-# Cálculo del gran capital y gran capital neto
-if current_value > 0 and inflation >= 0 and years > 0 and tax_rate >= 0:
-    final_value = calculate_final_value(current_value, inflation, years)
-    net_value = calculate_net_value(final_value, tax_rate)
+# Botón "Calcular"
+if st.button("Calcular"):
+    if current_value > 0 and inflation >= 0 and years > 0 and tax_rate >= 0:
+        # Cálculo del gran capital y gran capital neto
+        final_value = calculate_final_value(current_value, inflation, years)
+        net_value = calculate_net_value(final_value, tax_rate)
 
-    texto_resultado = (
-        f"En base a estos datos, el importe que debes alcanzar es {final_value:,.2f}. "
-        f"Sin embargo, como Hacienda te quitará una parte de los beneficios, deberás alcanzar un capital algo mayor. "
-        f"Ese GRAN CAPITAL es de {net_value:,.2f}."
-    )
-    st.markdown(texto_resultado)
-    st.markdown(" ")
+        # Mostrar resultados
+        texto_resultado = (
+            f"En base a estos datos, el importe que debes alcanzar es {final_value:,.2f}. "
+            f"Sin embargo, como Hacienda te quitará una parte de los beneficios, deberás alcanzar un capital algo mayor. "
+            f"Ese GRAN CAPITAL es de {net_value:,.2f}."
+        )
+        st.markdown(texto_resultado)
 
-    nuevo_parrafo = (
-        "Ahora introduce la rentabilidad promedio anual que esperas alcanzar con tu estrategia de inversión. "
-        "En la sección de carteras modelo, tienes varias propuestas que te indican la rentabilidad estimada "
-        "en base a cómo se han comportado en el pasado. Introduce también un porcentaje de incremento anual "
-        "del ahorro que destinarás a la inversión. Sería importante que lo introdujeras porque eso querrá "
-        "decir que todos los años tratarás de incrementar tus aportaciones en ese porcentaje para alimentar "
-        "más a tu \"máquina de hacer dinero\"."
-    )
-    st.markdown(nuevo_parrafo)
-else:
-    st.markdown("Por favor, completa todos los campos para obtener los resultados. 🙏")
+        # Texto adicional
+        nuevo_parrafo = (
+            "Ahora introduce la rentabilidad promedio anual que esperas alcanzar con tu estrategia de inversión. "
+            "En la sección de carteras modelo, tienes varias propuestas que te indican la rentabilidad estimada "
+            "en base a cómo se han comportado en el pasado. Introduce también un porcentaje de incremento anual "
+            "del ahorro que destinarás a la inversión. Sería importante que lo introdujeras porque eso querrá "
+            "decir que todos los años tratarás de incrementar tus aportaciones en ese porcentaje para alimentar "
+            "más a tu \"máquina de hacer dinero\"."
+        )
+        st.markdown(nuevo_parrafo)
+    else:
+        st.markdown("Por favor, completa todos los campos para obtener los resultados. 🙏")
+
+
+
 
 # Entradas adicionales para los cálculos de ahorro
 st.header("Datos de la Inversión")
