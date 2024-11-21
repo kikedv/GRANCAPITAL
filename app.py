@@ -49,6 +49,13 @@ tax_rate = st.number_input("Impuestos estimados sobre las ganancias (%):", min_v
 
 # Datos de la Inversión
 st.header("Datos de la Inversión")
+st.markdown(
+    "Ahora introduce la rentabilidad promedio anual que esperas alcanzar con tu estrategia de inversión. "
+    "En la sección de carteras modelo, tienes varias propuestas que te indican la rentabilidad estimada en "
+    "base a cómo se han comportado en el pasado. Introduce también un porcentaje de incremento anual del "
+    "ahorro que destinarás a la inversión. Sería importante que lo introdujeras porque eso querrá decir "
+    "que todos los años tratarás de incrementar tus aportaciones en ese porcentaje para alimentar más a tu máquina de hacer dinero."
+)
 expected_rate = st.number_input("Rentabilidad esperada de la inversión (%):", min_value=0.0, step=0.1)
 annual_increase = st.number_input("Incremento ahorro anual (%):", min_value=0.0, step=0.1)
 
@@ -71,7 +78,7 @@ else:
     st.markdown("Por favor, completa todos los campos para obtener los resultados. 🙏")
 
 # Cálculos finales
-if expected_rate > 0 and years > 0 and net_value > 0:
+if expected_rate > 0 and years > 0 and 'net_value' in locals():
     st.header("Cálculos Finales")
 
     # Cálculo del ahorro sin incremento anual
