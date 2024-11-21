@@ -84,48 +84,54 @@ annual_increase = st.number_input("Incremento ahorro anual (%):", min_value=0.0,
 if expected_rate > 0 and years > 0 and net_value > 0:
     st.header("Cálculos Finales")
 
-    # Cálculo del ahorro sin incremento anual
-    annual_savings = calculate_annual_savings(expected_rate, years, initial_capital, net_value)
-    monthly_savings = annual_savings / 12
-
-    st.markdown(f"**Ahorro periódico anual (sin incremento anual):** ${annual_savings:,.2f}")
-    st.markdown(f"**Ahorro periódico mensual (sin incremento anual):** ${monthly_savings:,.2f}")
-
     # Cálculo del ahorro con incremento anual
     annual_savings_increase = calculate_annual_savings_with_increase(
         expected_rate, annual_increase, years, initial_capital, net_value
     )
-    monthly_savings_increase = annual_savings_increase / 12
-
-    st.markdown(f"**Ahorro periódico anual (con incremento anual):** ${annual_savings_increase:,.2f}")
-    st.markdown(f"**Ahorro periódico mensual (con incremento anual):** ${monthly_savings_increase:,.2f}")
 
     # Gráfico de evolución del capital
     st.header("Evolución del Capital Acumulado")
 
-    # Cálculo de la evolución del capital
+    # Variables para la evolución del capital
     capital_evolucion = []
-    ahorro_anual = annual_savings_increase
+    aportaciones = []
+    revalorizacion = []
     capital_actual = initial_capital
+    ahorro_anual = annual_savings_increase
+    total_aportaciones = initial_capital
 
     for i in range(1, years + 1):
-        capital_actual *= (1 + expected_rate / 100)  # Aplicar rentabilidad
-        capital_actual += ahorro_anual              # Agregar el ahorro anual
+        # Aplicar rentabilidad
+        capital_actual *= (1 + expected_rate / 100)
+        # Agregar el ahorro anual
+        capital_actual += ahorro_anual
+        # Registrar aportaciones
+        total_aportaciones += ahorro_anual
+        aportaciones.append(total_aportaciones)
+        # Registrar revalorización
+        revalorizacion.append(capital_actual - total_aportaciones)
+        # Guardar capital acumulado total
         capital_evolucion.append(capital_actual)
-        ahorro_anual *= (1 + inflation / 100)       # Incrementar el ahorro anual según la inflación
+        # Incrementar el ahorro anual por inflación
+        ahorro_anual *= (1 + inflation / 100)
 
     # Crear DataFrame para el gráfico
     df_evolucion = pd.DataFrame({
         "Año": list(range(1, years + 1)),
-        "Capital Acumulado": capital_evolucion
+        "Capital Aportado": aportaciones,
+        "Revalorización": revalorizacion,
+        "Capital Total": capital_evolucion
     })
 
-    # Generar el gráfico
+    # Generar gráfico de área
     plt.figure(figsize=(10, 6))
-    plt.plot(df_evolucion["Año"], df_evolucion["Capital Acumulado"], marker='o')
+    plt.fill_between(df_evolucion["Año"], df_evolucion["Capital Aportado"], label="Capital Aportado", alpha=0.6)
+    plt.fill_between(df_evolucion["Año"], df_evolucion["Capital Total"], df_evolucion["Capital Aportado"],
+                     label="Revalorización", alpha=0.6)
     plt.title("Evolución del Capital Acumulado", fontsize=16)
     plt.xlabel("Año", fontsize=12)
     plt.ylabel("Capital Acumulado ($)", fontsize=12)
+    plt.legend(loc="upper left")
     plt.grid(True)
     plt.tight_layout()
 
@@ -133,4 +139,4 @@ if expected_rate > 0 and years > 0 and net_value > 0:
     st.pyplot(plt)
 
 st.markdown("---")
-st.markdown("Desarrollado por **Socaire, Gdp*")
+st.markdown("Desarrollado por **Tu Nombre**")
