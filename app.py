@@ -47,6 +47,11 @@ years = st.number_input("Número de años:", min_value=1, step=1)
 inflation = st.number_input("Inflación promedio estimada (%):", min_value=0.0, step=0.1)
 tax_rate = st.number_input("Impuestos estimados sobre las ganancias (%):", min_value=0.0, step=0.1)
 
+# Datos de la Inversión
+st.header("Datos de la Inversión")
+expected_rate = st.number_input("Rentabilidad esperada de la inversión (%):", min_value=0.0, step=0.1)
+annual_increase = st.number_input("Incremento ahorro anual (%):", min_value=0.0, step=0.1)
+
 st.header("Cálculos Intermedios")
 
 # Cálculo del gran capital y gran capital neto
@@ -73,12 +78,6 @@ if current_value > 0 and inflation >= 0 and years > 0 and tax_rate >= 0:
     st.markdown(nuevo_parrafo)
 else:
     st.markdown("Por favor, completa todos los campos para obtener los resultados. 🙏")
-
-# Entradas adicionales para los cálculos de ahorro
-st.header("Datos de la Inversión")
-
-expected_rate = st.number_input("Rentabilidad esperada de la inversión (%):", min_value=0.0, step=0.1)
-annual_increase = st.number_input("Incremento ahorro anual (%):", min_value=0.0, step=0.1)
 
 # Cálculos finales
 if expected_rate > 0 and years > 0 and net_value > 0:
