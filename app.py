@@ -46,9 +46,8 @@ parrafo_inicial = (
 st.markdown(parrafo_inicial)
 
 # Entradas del usuario
-st.header("Datos del Objetivo")
+st.header("Datos del Cálculo")
 
-objective = st.text_input("Objetivo:", placeholder="Ejemplo: Master para mi hijo")
 current_value = st.number_input("Importe actual del objetivo:", min_value=0.0, step=1000.0)
 initial_capital = st.number_input("Capital inicial:", min_value=0.0, step=1000.0)
 years = st.number_input("Número de años:", min_value=1, step=1)
