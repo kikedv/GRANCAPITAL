@@ -80,8 +80,8 @@ if st.button("CALCULAR"):
         )
         st.markdown(texto_resultado)
 
-        # Cálculo del ahorro sin incremento anual
-        annual_savings = calculate_annual_savings(expected_rate, years, initial_capital, net_value)
+        # Cálculo del ahorro sin incremento anual (corregido con abs())
+        annual_savings = abs(calculate_annual_savings(expected_rate, years, initial_capital, net_value))
         monthly_savings = annual_savings / 12
 
         # Cálculo del ahorro con incremento anual
