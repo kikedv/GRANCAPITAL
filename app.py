@@ -133,4 +133,4 @@ if expected_rate > 0 and years > 0 and net_value > 0:
     st.pyplot(plt)
 
 st.markdown("---")
-st.markdown("Desarrollado por **Tu Nombre**")
+st.markdown("Desarrollado por **Socaire, Gdp*")
