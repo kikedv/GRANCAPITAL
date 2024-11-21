@@ -35,15 +35,7 @@ def calculate_annual_savings_with_increase(rate, increase_rate, years, initial_c
     return numerator / denominator if denominator != 0 else 0
 
 # Título
-st.title("¿Cuánto necesito ahorrar todos los meses para conseguir mis objetivos?")
-
-# Párrafo inicial
-parrafo_inicial = (
-    "Esta herramienta te ayudará para saber grosso modo cuánto tienes que ahorrar e invertir cada mes "
-    "(y cada año) para alcanzar un determinado objetivo económico. Es una orientación, una ayuda. "
-    "Completa los siguientes campos y observa qué te sugieren las matemáticas."
-)
-st.markdown(parrafo_inicial)
+st.title("Calculadora de Ahorro para Gran Capital")
 
 # Entradas del usuario
 st.header("Datos del Objetivo")
@@ -55,98 +47,96 @@ years = st.number_input("Número de años:", min_value=1, step=1)
 inflation = st.number_input("Inflación promedio estimada (%):", min_value=0.0, step=0.1)
 tax_rate = st.number_input("Impuestos estimados sobre las ganancias (%):", min_value=0.0, step=0.1)
 
-# Botón "Calcular"
-if st.button("Calcular"):
-    if current_value > 0 and inflation >= 0 and years > 0 and tax_rate >= 0:
-        # Cálculo del gran capital y gran capital neto
-        final_value = calculate_final_value(current_value, inflation, years)
-        net_value = calculate_net_value(final_value, tax_rate)
+st.header("Cálculos Intermedios")
 
-        # Mostrar resultados
-        texto_resultado = (
-            f"En base a estos datos, el importe que debes alcanzar es ${final_value:,.2f}. "
-            f"Sin embargo, como Hacienda te quitará una parte de los beneficios, deberás alcanzar un capital algo mayor. "
-            f"Ese GRAN CAPITAL es de ${net_value:,.2f}."
-        )
-        st.markdown(texto_resultado)
+# Cálculo del gran capital y gran capital neto
+if current_value > 0 and inflation >= 0 and years > 0 and tax_rate >= 0:
+    final_value = calculate_final_value(current_value, inflation, years)
+    net_value = calculate_net_value(final_value, tax_rate)
 
-        # Texto adicional
-        nuevo_parrafo = (
-            "Ahora introduce la rentabilidad promedio anual que esperas alcanzar con tu estrategia de inversión. "
-            "En la sección de carteras modelo, tienes varias propuestas que te indican la rentabilidad estimada "
-            "en base a cómo se han comportado en el pasado. Introduce también un porcentaje de incremento anual "
-            "del ahorro que destinarás a la inversión. Sería importante que lo introdujeras porque eso querrá "
-            "decir que todos los años tratarás de incrementar tus aportaciones en ese porcentaje para alimentar "
-            "más a tu \"máquina de hacer dinero\"."
-        )
-        st.markdown(nuevo_parrafo)
+    texto_resultado = (
+        f"En base a estos datos, el importe que debes alcanzar es {final_value:,.2f}. "
+        f"Sin embargo, como Hacienda te quitará una parte de los beneficios, deberás alcanzar un capital algo mayor. "
+        f"Ese GRAN CAPITAL es de {net_value:,.2f}."
+    )
+    st.markdown(texto_resultado)
+    st.markdown(" ")
 
-        # Datos de inversión
-        st.header("Datos de la Inversión")
-        expected_rate = st.number_input("Rentabilidad esperada de la inversión (%):", min_value=0.0, step=0.1)
-        annual_increase = st.number_input("Incremento ahorro anual (%):", min_value=0.0, step=0.1)
+    nuevo_parrafo = (
+        "Ahora introduce la rentabilidad promedio anual que esperas alcanzar con tu estrategia de inversión. "
+        "En la sección de carteras modelo, tienes varias propuestas que te indican la rentabilidad estimada "
+        "en base a cómo se han comportado en el pasado. Introduce también un porcentaje de incremento anual "
+        "del ahorro que destinarás a la inversión. Sería importante que lo introdujeras porque eso querrá "
+        "decir que todos los años tratarás de incrementar tus aportaciones en ese porcentaje para alimentar "
+        "más a tu \"máquina de hacer dinero\"."
+    )
+    st.markdown(nuevo_parrafo)
+else:
+    st.markdown("Por favor, completa todos los campos para obtener los resultados. 🙏")
 
-        if expected_rate > 0:
-            # Cálculo del ahorro con incremento anual
-            annual_savings_increase = calculate_annual_savings_with_increase(
-                expected_rate, annual_increase, years, initial_capital, net_value
-            )
+# Entradas adicionales para los cálculos de ahorro
+st.header("Datos de la Inversión")
 
-            # Mostrar resultados de ahorro
-            st.header("Cálculos Finales")
-            st.markdown(f"**Ahorro periódico anual (con incremento anual):** ${annual_savings_increase:,.2f}")
-            st.markdown(f"**Ahorro periódico mensual (con incremento anual):** ${(annual_savings_increase / 12):,.2f}")
+expected_rate = st.number_input("Rentabilidad esperada de la inversión (%):", min_value=0.0, step=0.1)
+annual_increase = st.number_input("Incremento ahorro anual (%):", min_value=0.0, step=0.1)
 
-            # Gráfico de evolución del capital
-            st.header("Evolución del Capital Acumulado")
+# Cálculos finales
+if expected_rate > 0 and years > 0 and net_value > 0:
+    st.header("Cálculos Finales")
 
-            # Variables para la evolución del capital
-            capital_evolucion = []
-            aportaciones = []
-            revalorizacion = []
-            capital_actual = initial_capital
-            ahorro_anual = annual_savings_increase
-            total_aportaciones = initial_capital
+    # Cálculo del ahorro con incremento anual
+    annual_savings_increase = calculate_annual_savings_with_increase(
+        expected_rate, annual_increase, years, initial_capital, net_value
+    )
 
-            for i in range(1, years + 1):
-                # Aplicar rentabilidad
-                capital_actual *= (1 + expected_rate / 100)
-                # Agregar el ahorro anual
-                capital_actual += ahorro_anual
-                # Registrar aportaciones
-                total_aportaciones += ahorro_anual
-                aportaciones.append(total_aportaciones)
-                # Registrar revalorización
-                revalorizacion.append(capital_actual - total_aportaciones)
-                # Guardar capital acumulado total
-                capital_evolucion.append(capital_actual)
-                # Incrementar el ahorro anual por inflación
-                ahorro_anual *= (1 + inflation / 100)
+    # Gráfico de evolución del capital
+    st.header("Evolución del Capital Acumulado")
 
-            # Crear DataFrame para el gráfico
-            df_evolucion = pd.DataFrame({
-                "Año": list(range(1, years + 1)),
-                "Capital Aportado": aportaciones,
-                "Revalorización": revalorizacion,
-                "Capital Total": capital_evolucion
-            })
+    # Variables para la evolución del capital
+    capital_evolucion = []
+    aportaciones = []
+    revalorizacion = []
+    capital_actual = initial_capital
+    ahorro_anual = annual_savings_increase
+    total_aportaciones = initial_capital
 
-            # Generar gráfico de área
-            plt.figure(figsize=(10, 6))
-            plt.fill_between(df_evolucion["Año"], df_evolucion["Capital Aportado"], label="Capital Aportado", alpha=0.6)
-            plt.fill_between(df_evolucion["Año"], df_evolucion["Capital Total"], df_evolucion["Capital Aportado"],
-                             label="Revalorización", alpha=0.6)
-            plt.title("Evolución del Capital Acumulado", fontsize=16)
-            plt.xlabel("Año", fontsize=12)
-            plt.ylabel("Capital Acumulado ($)", fontsize=12)
-            plt.legend(loc="upper left")
-            plt.grid(True)
-            plt.tight_layout()
+    for i in range(1, years + 1):
+        # Aplicar rentabilidad
+        capital_actual *= (1 + expected_rate / 100)
+        # Agregar el ahorro anual
+        capital_actual += ahorro_anual
+        # Registrar aportaciones
+        total_aportaciones += ahorro_anual
+        aportaciones.append(total_aportaciones)
+        # Registrar revalorización
+        revalorizacion.append(capital_actual - total_aportaciones)
+        # Guardar capital acumulado total
+        capital_evolucion.append(capital_actual)
+        # Incrementar el ahorro anual por inflación
+        ahorro_anual *= (1 + inflation / 100)
 
-            # Mostrar el gráfico en Streamlit
-            st.pyplot(plt)
-    else:
-        st.markdown("Por favor, completa todos los campos para obtener los resultados. 🙏")
+    # Crear DataFrame para el gráfico
+    df_evolucion = pd.DataFrame({
+        "Año": list(range(1, years + 1)),
+        "Capital Aportado": aportaciones,
+        "Revalorización": revalorizacion,
+        "Capital Total": capital_evolucion
+    })
+
+    # Generar gráfico de área
+    plt.figure(figsize=(10, 6))
+    plt.fill_between(df_evolucion["Año"], df_evolucion["Capital Aportado"], label="Capital Aportado", alpha=0.6)
+    plt.fill_between(df_evolucion["Año"], df_evolucion["Capital Total"], df_evolucion["Capital Aportado"],
+                     label="Revalorización", alpha=0.6)
+    plt.title("Evolución del Capital Acumulado", fontsize=16)
+    plt.xlabel("Año", fontsize=12)
+    plt.ylabel("Capital Acumulado ($)", fontsize=12)
+    plt.legend(loc="upper left")
+    plt.grid(True)
+    plt.tight_layout()
+
+    # Mostrar el gráfico en Streamlit
+    st.pyplot(plt)
 
 st.markdown("---")
 st.markdown("Desarrollado por **Tu Nombre**")
