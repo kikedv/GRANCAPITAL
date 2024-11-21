@@ -1,3 +1,4 @@
 streamlit
 numpy-financial
-matplotlib
+matplotlib.pyplot
+pandas
