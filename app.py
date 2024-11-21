@@ -152,4 +152,4 @@ if st.button("CALCULAR"):
         st.markdown("Por favor, completa todos los campos para obtener los resultados. 🙏")
 
 st.markdown("---")
-st.markdown("Desarrollado por **Tu Nombre**")
+st.markdown("Desarrollado por **Socaire, GdP**")
